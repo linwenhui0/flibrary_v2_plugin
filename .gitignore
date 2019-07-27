@@ -11,3 +11,18 @@ pubspec.lock
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
 doc/api/
+flibrary_plugin_android.iml
+.idea
+flibrary_plugin.iml
+.flutter-plugins
+.metadata
+android.iml
+example/android/.gradle
+app.iml
+GeneratedPluginRegistrant.java
+Podfile.lock
+example/ios/.symlinks
+example/ios/Pods/FMDB
+example/ios/Pods
+GeneratedPluginRegistrant.h
+GeneratedPluginRegistrant.m
