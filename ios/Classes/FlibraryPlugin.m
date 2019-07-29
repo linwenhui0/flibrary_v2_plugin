@@ -21,8 +21,6 @@
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   if ([PLATFORM_VERSION isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else if([HAVE_EXTERNAL_STORAGE isEqualToString:call.method]) {
-      result(FALSE);
   } else if([GET_SCREEN_HEIGHT isEqualToString:call.method]) {
       CGRect rect = [[UIScreen mainScreen] bounds];
       CGSize size = rect.size;
@@ -33,20 +31,6 @@
       result([[NSNumber alloc] initWithInt:(int)(size.width*[UIScreen mainScreen].scale)]);
   } else if([GET_SCREEN_RATIO isEqualToString:call.method]) {
       result([[NSNumber alloc] initWithDouble:[UIScreen mainScreen].scale]);
-  } else if([GET_PHONE_TYPE isEqualToString:call.method]){
-      // 判断当前运行的设备
-      if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-          result([[NSNumber alloc] initWithInt:1]);
-      } else {
-          result([[NSNumber alloc] initWithInt:0]);
-      }
-  } else if([GET_LANGUAGE isEqualToString:call.method]){
-      // 当前系统语言
-      NSString* language = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] firstObject];
-      return result(language);
-  } else if([GET_CURRENT_NETWORK_TYPE isEqualToString:call.method]) {
-      // 获取网络类型
-      result(@"4G");
   } else if([IS_ROOT isEqualToString:call.method]){
       // 是否越狱
       BOOL r = [self isPrisonBreak];

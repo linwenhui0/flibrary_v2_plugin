@@ -21,7 +21,6 @@ class FlibraryPlugin : MethodCallHandler {
 
     companion object {
 
-        const val HAVE_EXTERNAL_STORAGE = "haveExternalStorage"
 
         const val PLATFORM_VERSION = "getPlatformVersion"
 
@@ -32,12 +31,6 @@ class FlibraryPlugin : MethodCallHandler {
         const val SCREEN_RATIO = "getScreenRatio"
 
         const val TEXT_RATIO = "getTextRatio"
-
-        const val PHONE_TYPE = "getPhoneType"
-
-        const val LANGUAGE = "getLanguage"
-
-        const val NETWORK_TYPE = "getCurrentNetworkType"
 
         const val ROUTE_WIFI_MAC = "getRouteMacAddress"
 
@@ -69,15 +62,11 @@ class FlibraryPlugin : MethodCallHandler {
 
     override fun onMethodCall(call: MethodCall, result: Result): Unit {
         when (call.method) {
-            HAVE_EXTERNAL_STORAGE -> result.success(SdUtil.existSDCard())
             PLATFORM_VERSION -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
             SCREEN_WIDTH -> result.success(context.resources.displayMetrics.widthPixels)
             SCREEN_HEIGHT -> result.success(context.resources.displayMetrics.heightPixels)
             SCREEN_RATIO -> result.success(context.resources.displayMetrics.density)
             TEXT_RATIO -> result.success(context.resources.displayMetrics.scaledDensity)
-            PHONE_TYPE -> getPhoneType(result)
-            LANGUAGE -> result.success(Locale.getDefault().language)
-            NETWORK_TYPE -> result.success(SIMCardInfo(context).getCurrentNetworkType())
             ROUTE_WIFI_MAC -> getRouteWifiMac(result)
             WIFI_MAC -> getWifiMac(result)
             IMEI -> getImei(result)
@@ -90,16 +79,7 @@ class FlibraryPlugin : MethodCallHandler {
         }
     }
 
-    fun getPhoneType(result: Result) {
-        var telephonyManager: TelephonyManager? = null
-        val obj = context.getSystemService(Context.TELEPHONY_SERVICE)
-        if (obj is TelephonyManager) {
-            telephonyManager = obj
-        }
-        var phoneType: Int? = -1
-        phoneType = telephonyManager?.phoneType
-        result?.success(phoneType)
-    }
+
 
 
     private fun getRouteWifiMac(result: Result) {

@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  path_provider: any
+
   shared_preferences: any
   dio: any
   sqflite: any
@@ -21,18 +21,18 @@ dependencies:
   photo_view: any
   connectivity: any
   flutter_slidable: any
-  package_info: any
+
   stack_trace: any
-  crypto: any
-  device_info: any
+
+
   cookie_jar: any
   path: any
-  intl: any
+
   convert: any
-  flutter_permissions:
+  flutter_utils:
     git:
-      url: https://github.com/linwenhui0/flutter_permissions.git
-      refs: 0.0.2+1
+      url: https://github.com/linwenhui0/flibrary_utils.git
+      refs: 0.0.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

@@ -16,11 +16,6 @@ class FLibraryPlugin {
     return version;
   }
 
-  static Future<bool> get haveExternalStorage async {
-    final bool result = await _channel.invokeMethod("haveExternalStorage");
-    return result;
-  }
-
   static Future<int> get getScreenWidth async {
     final int result = await _channel.invokeMethod("getScreenWidth");
     return result;
@@ -39,24 +34,6 @@ class FLibraryPlugin {
   static Future<double> get getTextRatio async {
     final double result = await _channel.invokeMethod("getTextRatio");
     return result;
-  }
-
-  static Future<int> get getPhoneType async {
-    PermissionStatus permissionStatus =
-        await FlutterPermissions.requestPermission(Permission.ReadPhoneState);
-    if (permissionStatus == PermissionStatus.authorized) {
-      final int result = await _channel.invokeMethod("getPhoneType");
-      return result;
-    }
-    return -1;
-  }
-
-  static Future<String> get getLanguage async {
-    return await _channel.invokeMethod("getLanguage");
-  }
-
-  static Future<String> get getCurrentNetworkType async {
-    return await _channel.invokeMethod("getCurrentNetworkType");
   }
 
   static Future<String> getRouteWifiMac() async {
