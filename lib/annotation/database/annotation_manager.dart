@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flibrary_plugin/utils/Print.dart';
-import 'package:flibrary_plugin/utils/utils.dart';
+import 'package:flutter_utils/util/print.dart';
+import 'package:flutter_utils/util/utils_path.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart'
     show getExternalStorageDirectory, getApplicationDocumentsDirectory;

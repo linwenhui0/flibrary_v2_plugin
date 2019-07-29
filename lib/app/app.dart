@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
-import 'package:flibrary_plugin/utils/Print.dart';
-import 'package:flibrary_plugin/utils/locale/Translations.dart';
-import 'package:flibrary_plugin/utils/locale/application.dart';
-import 'package:flibrary_plugin/utils/locale/localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_utils/util/locale/Translations.dart';
+import 'package:flutter_utils/util/locale/application.dart';
+import 'package:flutter_utils/util/locale/localizations.dart';
+import 'package:flutter_utils/util/print.dart';
 import 'package:stack_trace/stack_trace.dart';
 
 class App extends StatelessWidget {

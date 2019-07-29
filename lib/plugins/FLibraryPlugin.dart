@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
-import 'package:flibrary_plugin/utils/Print.dart';
-import 'package:flibrary_plugin/utils/device_util.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_permissions/flutter_permissions.dart';
+import 'package:flutter_utils/util/device_util.dart';
 
 class FLibraryPlugin {
   FLibraryPlugin._();

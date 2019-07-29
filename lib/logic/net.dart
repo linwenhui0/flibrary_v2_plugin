@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:flibrary_plugin/plugins/FLibraryPlugin.dart';
-import 'package:flibrary_plugin/utils/Print.dart';
+import 'package:flutter_utils/util/print.dart';
 
 class Request {
   Dio dio;

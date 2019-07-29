@@ -1,4 +1,4 @@
-import 'package:flibrary_plugin/utils/Print.dart';
+import 'package:flutter_utils/util/print.dart';
 
 enum DataType { string, int, double, bool }
 

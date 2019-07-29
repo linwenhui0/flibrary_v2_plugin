@@ -1,5 +1,5 @@
 import 'package:flibrary_plugin/annotation/database/annotation.dart';
-import 'package:flibrary_plugin/utils/Print.dart';
+import 'package:flutter_utils/util/print.dart';
 
 class School {
   int id;

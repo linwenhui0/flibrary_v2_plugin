@@ -10,13 +10,6 @@ import 'package:flibrary_plugin/logic/net.dart'
 import 'package:flibrary_plugin/logic/net.dart';
 import 'package:flibrary_plugin/model/menu.dart';
 import 'package:flibrary_plugin/plugins/FLibraryPlugin.dart';
-import 'package:flibrary_plugin/utils/Density.dart';
-import 'package:flibrary_plugin/utils/Print.dart';
-import 'package:flibrary_plugin/utils/device_util.dart';
-import 'package:flibrary_plugin/utils/encrypt/cryptos.dart';
-import 'package:flibrary_plugin/utils/network_utils.dart';
-import 'package:flibrary_plugin/utils/toast.dart';
-import 'package:flibrary_plugin/utils/utils.dart' show PathUtil;
 import 'package:flibrary_plugin/widget/button/button.dart';
 import 'package:flibrary_plugin/widget/button/check_box.dart';
 import 'package:flibrary_plugin/widget/button/receiver_code_button.dart';
@@ -25,7 +18,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_permissions/flutter_permissions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_utils/util/density.dart';
+import 'package:flutter_utils/util/utils_path.dart';
+import 'package:flutter_utils/util/print.dart';
+import 'package:flutter_utils/util/network_utils.dart';
+import 'package:flutter_utils/util/device_util.dart';
+import 'package:flutter_utils/util/encrypt/md5.dart';
 import 'db/database_test.dart';
 import 'db/school.dart';
 import 'db/student.dart';
@@ -119,22 +117,6 @@ class _MyAppState extends State<MyApp> {
             child: new Text(
               "读取sp",
             ),
-          ),
-          new MaterialButton(
-            onPressed: () {
-              Toast.show(context, "弹出Toast");
-//                    showToast("弹出Toast",
-//                        gravity: EnumToastGravity.BOTTOM);
-            },
-            child: new Text("显示Toast"),
-          ),
-          new MaterialButton(
-            onPressed: () {
-              Toast.dismiss();
-//                    showToast("弹出Toast",
-//                        gravity: EnumToastGravity.BOTTOM);
-            },
-            child: new Text("隐藏Toast"),
           ),
           new Container(
             child: Row(

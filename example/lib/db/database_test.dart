@@ -1,9 +1,9 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:flibrary_plugin/utils/utils.dart';
 import 'package:path_provider/path_provider.dart'
     show getExternalStorageDirectory, getApplicationDocumentsDirectory;
 import 'dart:io';
+import 'package:flutter_utils/util/utils_path.dart';
 
 class DatabaseTest {
   static const _VERSION = 1;
