@@ -4,8 +4,6 @@ import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_utils/util/locale/Translations.dart';
-import 'package:flutter_utils/util/locale/application.dart';
 import 'package:flutter_utils/util/locale/localizations.dart';
 import 'package:flutter_utils/util/print.dart';
 import 'package:stack_trace/stack_trace.dart';
@@ -14,32 +12,37 @@ class App extends StatelessWidget {
   final ThemeData theme;
   final Locale locale;
   final Widget home;
-  final LocalizationsDelegate localizationsDelegate;
+  final Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates;
   final Iterable<Locale> supportedLocales;
   final RouteFactory onGenerateRoute;
 
-  const App(
-      {Key key,
-      this.home,
-      this.theme,
-      this.locale,
-      this.localizationsDelegate: const TranslationsDelegate(),
-      this.supportedLocales,
-      this.onGenerateRoute, })
-      : super(key: key);
+  const App({
+    Key key,
+    this.home,
+    this.theme,
+    this.locale,
+    this.localizationsDelegates,
+    this.supportedLocales,
+    this.onGenerateRoute,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    List<LocalizationsDelegate<dynamic>> delegates = List();
+    if (localizationsDelegates != null) {
+      for (LocalizationsDelegate<dynamic> localizationsDelegate
+          in localizationsDelegates) {
+        delegates.add(localizationsDelegate);
+      }
+    }
+    delegates.add(ZHCupertinoLocalizations.delegate);
+    delegates.add(GlobalMaterialLocalizations.delegate);
+    delegates.add(GlobalWidgetsLocalizations.delegate);
     return MaterialApp(
       theme: theme,
       locale: locale,
-      localizationsDelegates: [
-        this.localizationsDelegate,
-        ZHCupertinoLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: supportedLocales ?? applic.supportedLocales(),
+      localizationsDelegates: delegates,
+      supportedLocales: supportedLocales,
       home: home,
       onGenerateRoute: onGenerateRoute,
     );

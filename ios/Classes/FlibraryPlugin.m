@@ -19,9 +19,7 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  if ([PLATFORM_VERSION isEqualToString:call.method]) {
-    result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-  } else if([GET_SCREEN_HEIGHT isEqualToString:call.method]) {
+  if([GET_SCREEN_HEIGHT isEqualToString:call.method]) {
       CGRect rect = [[UIScreen mainScreen] bounds];
       CGSize size = rect.size;
       result([[NSNumber alloc] initWithInt:(int)(size.height*[UIScreen mainScreen].scale)]);

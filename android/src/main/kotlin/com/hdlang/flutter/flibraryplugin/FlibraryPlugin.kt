@@ -21,9 +21,6 @@ class FlibraryPlugin : MethodCallHandler {
 
     companion object {
 
-
-        const val PLATFORM_VERSION = "getPlatformVersion"
-
         const val SCREEN_WIDTH = "getScreenWidth"
 
         const val SCREEN_HEIGHT = "getScreenHeight"
@@ -62,7 +59,6 @@ class FlibraryPlugin : MethodCallHandler {
 
     override fun onMethodCall(call: MethodCall, result: Result): Unit {
         when (call.method) {
-            PLATFORM_VERSION -> result.success("Android ${android.os.Build.VERSION.RELEASE}")
             SCREEN_WIDTH -> result.success(context.resources.displayMetrics.widthPixels)
             SCREEN_HEIGHT -> result.success(context.resources.displayMetrics.heightPixels)
             SCREEN_RATIO -> result.success(context.resources.displayMetrics.density)

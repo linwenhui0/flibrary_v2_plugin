@@ -49,39 +49,14 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   StringBuffer textBuffer;
   FocusNode _focusNodeFirstName = new FocusNode();
   TextEditingController phoneController = TextEditingController();
-  ReceiverCodeController receiverCodeController;
 
   @override
   void initState() {
     super.initState();
-    initPlatformState();
     textBuffer = new StringBuffer();
-    receiverCodeController = new ReceiverCodeController();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await FLibraryPlugin.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-      textBuffer.write("Running on: $_platformVersion\n");
-    });
   }
 
   @override
@@ -322,19 +297,32 @@ class _MyAppState extends State<MyApp> {
             controller: phoneController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-                suffix:SizedBox(child:  ReceiverCodeButton(
-                  10,
-                  phoneController,
-                  receiverCodeController,
-                  defaultText: "获得验证码",
-                  waitCodeTextPre: "(",
-                  waitCodeTextSuffix: ")",
-                  backgroundColor: Colors.blue,
-                  waitBackgroundColor: Colors.amber,
-                  onPressed: () {
-                    receiverCodeController.startCountTimer();
-                  },
-                ),width: Density().autoWPx(160),height: Density().autoHPx(80),)),
+                suffix: SizedBox(
+              child: ReceiverCodeButton(
+                10,
+                phoneController,
+                onSendSmsCheck: (String phone) {
+                  if (phone?.length == 11) {
+                    return true;
+                  }
+                  return false;
+                },
+                defaultChild: Center(
+                  child: Text("获得验证码"),
+                ),
+                onWaitCountTimer: (int timer) {
+                  return Container(
+                    child: Center(
+                      child: Text("($timer)"),
+                    ),
+                    height: Density().autoHPx(80),
+                    color: Colors.grey,
+                  );
+                },
+              ),
+              width: Density().autoWPx(160),
+              height: Density().autoHPx(80),
+            )),
           ),
           TextFieldInput(
             prefixIcon: Material(

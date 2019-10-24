@@ -2,7 +2,6 @@
 
 @interface FlibraryPlugin : NSObject<FlutterPlugin>
 
-#define PLATFORM_VERSION @"getPlatformVersion"
 #define GET_SCREEN_WIDTH @"getScreenWidth"
 #define GET_SCREEN_HEIGHT @"getScreenHeight"
 #define GET_SCREEN_RATIO @"getScreenRatio"

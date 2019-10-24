@@ -6,25 +6,12 @@ import 'package:flutter/material.dart';
 class ReceiverCodeButton extends StatefulWidget {
   final int initSeconds;
   final TextEditingController controller;
-  final String defaultText;
-  final String waitCodeTextPre, waitCodeTextSuffix;
-  final TextStyle textStyle;
-  final Color backgroundColor, waitBackgroundColor;
-  final RoundedRectangleBorder shape;
-  final VoidCallback onPressed;
-  final ReceiverCodeController receiverCodeController;
+  final Widget defaultChild;
+  final WaitCountTimer onWaitCountTimer;
+  final SendSmsCheck onSendSmsCheck;
 
-  const ReceiverCodeButton(
-      this.initSeconds, this.controller, this.receiverCodeController,
-      {Key key,
-      this.defaultText,
-      this.waitCodeTextPre,
-      this.waitCodeTextSuffix,
-      this.textStyle,
-      this.backgroundColor,
-      this.waitBackgroundColor,
-      this.shape,
-      this.onPressed})
+  const ReceiverCodeButton(this.initSeconds, this.controller,
+      {Key key, this.defaultChild, this.onWaitCountTimer, this.onSendSmsCheck})
       : super(key: key);
 
   @override
@@ -33,8 +20,7 @@ class ReceiverCodeButton extends StatefulWidget {
   }
 }
 
-class _ReceiverCodeButtonState extends State<ReceiverCodeButton>
-    with IReceiverCodeListener {
+class _ReceiverCodeButtonState extends State<ReceiverCodeButton> {
   int codeSeconds = -1;
   Timer codeTime;
 
@@ -42,13 +28,11 @@ class _ReceiverCodeButtonState extends State<ReceiverCodeButton>
   void dispose() {
     super.dispose();
     stopCountTimer();
-    widget.receiverCodeController._receiverCodes.remove(this);
   }
 
   @override
   void initState() {
     super.initState();
-    widget.receiverCodeController._receiverCodes.add(this);
   }
 
   @override
@@ -59,9 +43,9 @@ class _ReceiverCodeButtonState extends State<ReceiverCodeButton>
     return buildCountDownTimer();
   }
 
-  @override
   void startCountTimer() {
-    if (widget.controller != null && widget.controller.text.isNotEmpty) {
+    if (widget.controller != null &&
+        widget.controller.text?.isNotEmpty == true) {
       if (codeSeconds < 0) {
         codeSeconds = widget.initSeconds;
         codeTime?.cancel();
@@ -78,7 +62,6 @@ class _ReceiverCodeButtonState extends State<ReceiverCodeButton>
     }
   }
 
-  @override
   void stopCountTimer() {
     codeSeconds = -1;
     codeTime?.cancel();
@@ -86,60 +69,25 @@ class _ReceiverCodeButtonState extends State<ReceiverCodeButton>
   }
 
   Widget buildDefault() {
-    return FlatButton(
-        padding: EdgeInsets.all(0),
-        color: widget.backgroundColor,
-        shape: widget.shape,
-        onPressed: () {
-          if (widget.controller != null &&
-              widget.controller.text.isNotEmpty &&
-              widget.onPressed != null) {
-            widget.onPressed();
+    return InkWell(
+      child: widget.defaultChild,
+      onTap: () {
+        String phone = widget.controller.text;
+        if (widget.onSendSmsCheck != null) {
+          bool isSendSms = widget.onSendSmsCheck(phone);
+          if (isSendSms == true) {
+            startCountTimer();
           }
-        },
-        child: Text(
-          widget.defaultText,
-          style: widget.textStyle,
-        ));
+        }
+      },
+    );
   }
 
   Widget buildCountDownTimer() {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-          color: widget.waitBackgroundColor,
-          borderRadius: widget.shape?.borderRadius),
-      child: Center(
-        child: Text(
-          "${widget.waitCodeTextPre}$codeSeconds${widget.waitCodeTextSuffix}",
-          style: widget.textStyle,
-        ),
-      ),
-    );
+    return widget.onWaitCountTimer(codeSeconds);
   }
 }
 
-class ReceiverCodeController {
-  List<IReceiverCodeListener> _receiverCodes = List();
+typedef WaitCountTimer = Widget Function(int count);
 
-  void startCountTimer() {
-    if (_receiverCodes.isNotEmpty) {
-      for (IReceiverCodeListener listener in _receiverCodes) {
-        listener.startCountTimer();
-      }
-    }
-  }
-
-  void stopCountTimer() {
-    if (_receiverCodes.isNotEmpty) {
-      for (IReceiverCodeListener listener in _receiverCodes) {
-        listener.stopCountTimer();
-      }
-    }
-  }
-}
-
-abstract class IReceiverCodeListener {
-  void startCountTimer();
-
-  void stopCountTimer();
-}
+typedef SendSmsCheck = bool Function(String phone);

@@ -10,11 +10,6 @@ class FLibraryPlugin {
 
   static const MethodChannel _channel = const MethodChannel('flibrary_plugin');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod("getPlatformVersion");
-    return version;
-  }
-
   static Future<int> get getScreenWidth async {
     final int result = await _channel.invokeMethod("getScreenWidth");
     return result;
