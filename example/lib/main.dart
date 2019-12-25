@@ -278,7 +278,7 @@ class _MyAppState extends State<MyApp> {
           ),
           SizedBox(
             child: CheckBox(
-              child: Center(
+              defaultChild: Center(
                 child: Text("未选中"),
               ),
               checkedChild: Center(
@@ -833,9 +833,9 @@ class TestInterceptorsWrapper extends InterceptorsWrapper {
     FormData formData = options.data;
     FormData otherData = lowerCaseCompareByFormData(formData);
     options.path = "http://apis.juhe.cn/simpleWeather/query";
-    Print().printNative("data(${otherData.entries})");
+    Print().printNative("data(${otherData.fields})");
     Print().printNative(
-        "onRequest url(${options.baseUrl + options.path}) data(${formData.entries.runtimeType} ${formData.entries}) header(${options.headers} queryParameters(${options.queryParameters})");
+        "onRequest url(${options.baseUrl + options.path}) data(${formData.fields.runtimeType} ${formData.fields}) header(${options.headers} queryParameters(${options.queryParameters})");
     return super.onRequest(options);
   }
 

@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flibrary_plugin/plugins/FLibraryPlugin.dart';
 import 'package:flutter_utils/util/print.dart';
 
@@ -11,7 +13,7 @@ class Request {
   String url;
   Map<String, dynamic> _headers = Map();
   Map<String, String> _params = Map();
-  Map<String, UploadFileInfo> _files = Map();
+  Map<String, MultipartFile> _files = Map();
   Map<String, String> _extra = Map();
   bool useProxy;
 
@@ -76,17 +78,10 @@ class Request {
   }
 
   /// TODO 增加文件参数
-  void addFile(String key, String value, {String contentTypePre}) {
+  void addFile(String key, String value) async {
     File file = File(value);
     if (file.existsSync()) {
-      var name = value.substring(value.lastIndexOf("/") + 1, value.length);
-      if (contentTypePre?.isNotEmpty == true) {
-        var suffix = name.substring(name.lastIndexOf(".") + 1, name.length);
-        _files[key] = UploadFileInfo(file, name,
-            contentType: ContentType.parse("$contentTypePre/$suffix"));
-      } else {
-        _files[key] = UploadFileInfo(file, name);
-      }
+      _files[key] = await MultipartFile.fromFile(value);
     }
   }
 
@@ -108,7 +103,7 @@ class Request {
     if (this._params != null && this._params.isNotEmpty) {
       other.addAll(this._params);
     }
-    return FormData.from(other);
+    return FormData.fromMap(other);
   }
 
   /// TODO 拼接文件参数
@@ -121,7 +116,7 @@ class Request {
     if (this._files != null && this._files.isNotEmpty) {
       other.addAll(this._files);
     }
-    return FormData.from(other);
+    return FormData.fromMap(other);
   }
 
   String _buildUrl(String url) {
@@ -138,7 +133,6 @@ class Request {
       int sendTimeout = 10000,
       int receiveTimeout = 10000,
       CancelToken cancelToken,
-      ContentType contentType,
       ResponseType responseType,
       int maxRedirects,
       ProgressCallback onReceiveProgress}) async {
@@ -151,7 +145,6 @@ class Request {
             receiveTimeout: receiveTimeout,
             extra: _extra,
             queryParameters: _params,
-            contentType: contentType,
             responseType: responseType,
             maxRedirects: maxRedirects),
         cancelToken: cancelToken,
@@ -169,7 +162,6 @@ class Request {
       int sendTimeout = 10000,
       int receiveTimeout = 10000,
       CancelToken cancelToken,
-      ContentType contentType,
       ResponseType responseType,
       int maxRedirects,
       ProgressCallback onSendProgress,
@@ -191,7 +183,6 @@ class Request {
           sendTimeout: sendTimeout,
           receiveTimeout: receiveTimeout,
           extra: _extra,
-          contentType: contentType,
           responseType: responseType,
           maxRedirects: maxRedirects,
         ),
@@ -209,7 +200,6 @@ class Request {
       savePath,
       String method: "GET",
       CancelToken cancelToken,
-      ContentType contentType,
       ResponseType responseType,
       int maxRedirects,
       ProgressCallback onReceiveProgress}) async {
@@ -226,7 +216,6 @@ class Request {
           sendTimeout: sendTimeout,
           receiveTimeout: receiveTimeout,
           extra: _extra,
-          contentType: contentType,
           responseType: responseType,
           maxRedirects: maxRedirects,
         ),
@@ -247,12 +236,12 @@ class Request {
 
 FormData lowerCaseCompareByFormData(FormData formData) {
   List<MapEntry<String, dynamic>> data =
-      formData.entries.toList(growable: false);
+      formData.fields.toList(growable: false);
   data.sort((a, b) {
     return a.key.toLowerCase().compareTo(b.key.toLowerCase());
   });
 
-  return FormData.from(Map.fromEntries(data));
+  return FormData.fromMap(Map.fromEntries(data));
 }
 
 Map<String, dynamic> lowerCaseCompareByMap(Map<String, dynamic> mapData) {

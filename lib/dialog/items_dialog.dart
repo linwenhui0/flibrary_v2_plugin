@@ -97,7 +97,7 @@ class ItemDialog extends StatelessWidget {
                                 ),
                                 borderRadius: BorderRadius.circular(0),
                                 onPress: menu.onPress,
-                                color: menu.defaultColor,
+                                defaultColor: menu.defaultColor,
                                 activeColor:
                                     menu.activeColor ?? menu.defaultColor,
                               ),
@@ -143,7 +143,7 @@ class ItemDialog extends StatelessWidget {
                             cancelMenu.onPress();
                           }
                         },
-                        color: cancelMenu.defaultColor,
+                        defaultColor: cancelMenu.defaultColor,
                         activeColor:
                             cancelMenu.activeColor ?? cancelMenu.defaultColor,
                       ),

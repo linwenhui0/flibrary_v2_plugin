@@ -137,7 +137,7 @@ class MessageDialog extends StatelessWidget {
           child: Button(
         borderRadius: borderRadius,
         onPress: menu.onPress,
-        color: menu.defaultColor,
+        defaultColor: menu.defaultColor,
         child: Center(
           child: Text(
             menu.name,

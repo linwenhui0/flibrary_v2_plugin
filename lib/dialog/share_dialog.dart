@@ -120,7 +120,7 @@ class ShareDialog extends StatelessWidget {
           ],
         ),
       ),
-      color: menu.defaultColor,
+      defaultColor: menu.defaultColor,
       activeColor: menu.activeColor,
       borderRadius: borderRadius,
       onPress: menu.onPress,

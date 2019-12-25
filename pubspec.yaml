@@ -14,21 +14,19 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  shared_preferences: any
-  dio: any
-  sqflite: any
-  image_picker: any
-  photo_view: any
-  connectivity: any
-  flutter_slidable: any
+  shared_preferences: 0.5.6
+  dio: 3.0.7
+  dio_cookie_manager: 1.0.0
+  sqflite: 1.2.0
+  image_picker: 0.6.2
+  photo_view: 0.9.0
+  connectivity: 0.4.6
+  stack_trace: 1.9.3
 
-  stack_trace: any
+  cookie_jar: 1.0.1
+  path: 1.6.4
 
-
-  cookie_jar: any
-  path: any
-
-  convert: any
+  convert: 2.1.1
   flutter_utils:
     git:
       url: https://github.com/linwenhui0/flibrary_utils.git

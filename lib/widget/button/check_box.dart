@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 
 class CheckBox extends StatefulWidget {
   final Widget checkedChild;
-  final Widget child;
+  final Widget defaultChild;
   final ValueChanged<bool> onChange;
-  final Color defaultColor,checkedColor;
+  final Color defaultColor, checkedColor;
   final bool defaultCheck;
   final BorderRadius borderRadius;
 
   const CheckBox({
     Key key,
-    this.defaultCheck:false,
+    this.defaultCheck: false,
     this.checkedChild,
-    this.child,
+    this.defaultChild,
     this.defaultColor,
     this.checkedColor,
     this.borderRadius,
@@ -46,11 +46,11 @@ class _CheckBoxState extends State<CheckBox> {
         });
       },
       splashColor: widget.defaultColor,
-      highlightColor: widget.checkedColor,
+      highlightColor: widget.checkedColor ?? widget.defaultColor,
       borderRadius: widget.borderRadius,
       child: isActive
-          ? (widget.checkedChild != null ? widget.checkedChild : widget.child)
-          : widget.child,
+          ? (widget.checkedChild ?? widget.defaultChild)
+          : widget.defaultChild,
     );
   }
 }
