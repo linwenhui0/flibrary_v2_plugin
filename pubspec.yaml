@@ -30,7 +30,7 @@ dependencies:
   flutter_utils:
     git:
       url: https://github.com/linwenhui0/flibrary_utils.git
-      refs: 0.0.2
+      refs: 0.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

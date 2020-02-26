@@ -14,6 +14,7 @@ import 'package:flibrary_plugin/widget/button/button.dart';
 import 'package:flibrary_plugin/widget/button/check_box.dart';
 import 'package:flibrary_plugin/widget/button/receiver_code_button.dart';
 import 'package:flibrary_plugin/widget/input/text_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_permissions/flutter_permissions.dart';
@@ -23,7 +24,7 @@ import 'package:flutter_utils/util/utils_path.dart';
 import 'package:flutter_utils/util/print.dart';
 import 'package:flutter_utils/util/network_utils.dart';
 import 'package:flutter_utils/util/device_util.dart';
-import 'package:flutter_utils/util/encrypt/md5.dart';
+import 'package:flutter_utils/util/encrypt/encrypt_help.dart';
 import 'db/database_test.dart';
 import 'db/school.dart';
 import 'db/student.dart';
@@ -78,7 +79,7 @@ class _MyAppState extends State<MyApp> {
             },
             child: new Text(
               "保存sp",
-              style: TextStyle(fontSize: Density().autoHPx(32)),
+              style: TextStyle(fontSize: Density().autoPx(32)),
             ),
           ),
           new MaterialButton(
@@ -99,8 +100,8 @@ class _MyAppState extends State<MyApp> {
                 Image.network(
                   "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3797481993,1929347741&fm=27&gp=0.jpg",
                   fit: BoxFit.fitWidth,
-                  width: Density().autoWPx(719.0),
-                  height: Density().autoHPx(30.0),
+                  width: Density().autoPx(719.0),
+                  height: Density().autoPx(30.0),
                 )
               ],
             ),
@@ -315,24 +316,24 @@ class _MyAppState extends State<MyApp> {
                     child: Center(
                       child: Text("($timer)"),
                     ),
-                    height: Density().autoHPx(80),
+                    height: Density().autoPx(80),
                     color: Colors.grey,
                   );
                 },
               ),
-              width: Density().autoWPx(160),
-              height: Density().autoHPx(80),
+              width: Density().autoPx(160),
+              height: Density().autoPx(80),
             )),
           ),
           TextFieldInput(
             prefixIcon: Material(
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: Density().autoHPx(20)),
+                padding: EdgeInsets.symmetric(vertical: Density().autoPx(20)),
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Text(
                     "账号",
-                    style: TextStyle(fontSize: Density().autoHPx(20)),
+                    style: TextStyle(fontSize: Density().autoPx(20)),
                   ),
                   widthFactor: 1,
                 ),
@@ -341,7 +342,7 @@ class _MyAppState extends State<MyApp> {
             ),
             hintText: "请输入帐号",
             hintStyle: TextStyle(
-              fontSize: Density().autoHPx(20),
+              fontSize: Density().autoPx(20),
             ),
             onEditingComplete: () {
               Print().printNative("onEditingComplete");
@@ -350,10 +351,10 @@ class _MyAppState extends State<MyApp> {
               Print().printNative("onSubmitted $text");
             },
             contentPadding:
-                EdgeInsets.symmetric(vertical: Density().autoHPx(20)),
+                EdgeInsets.symmetric(vertical: Density().autoPx(20)),
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontSize: Density().autoHPx(20),
+              fontSize: Density().autoPx(20),
             ),
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.search,
@@ -363,7 +364,7 @@ class _MyAppState extends State<MyApp> {
           ),
           FlatButton(
               onPressed: () {
-                String result = Md5Util.generateMd5("123456");
+                String result = EncryptHelp.encodeMd5("123456");
                 textBuffer.write("result($result)\n");
                 this.setState(() {});
               },
@@ -473,42 +474,47 @@ class _MyAppState extends State<MyApp> {
                     context: context,
                     builder: (context) {
                       return MessageDialog(
-                        size: Size(
-                            Density().autoWPx(500), Density().autoHPx(300)),
-                        titleText: "提示",
-                        titleStyle: TextStyle(
-                            fontSize: Density().autoHPx(24),
+                        size:
+                            Size(Density().autoPx(500), Density().autoPx(300)),
+                        titleMenu: TitleMenu(
+                            title: "提示",
+                            titleTextStyle: TextStyle(
+                                fontSize: Density().autoPx(30),
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                            height: Density().autoPx(60)),
+                        messageMenu: MessageMenu(
+                          message: "内容" * 20,
+                          messageTextStyle: TextStyle(
+                            fontSize: Density().autoPx(30),
                             color: Colors.black,
-                            fontWeight: FontWeight.bold),
-                        messageText: "内容内容内容内容内容内容内容内容内容内容内容内容内容111",
-                        messageStyle: TextStyle(
-                          fontSize: Density().autoHPx(30),
-                          color: Colors.black,
+                          ),
                         ),
-                        showMessage: true,
-                        buttonMenus: [
-                          Menu(
-                            name: "取消",
-                            onPress: () {
+                        buttonSize: 2,
+                        buttonBuilder: (context, index) {
+                          return Expanded(
+                              child: CupertinoButton(
+                            color: Colors.white,
+                            padding: EdgeInsets.zero,
+                            borderRadius: BorderRadius.zero,
+                            child: Text(
+                              index == 0 ? "取消" : "确定",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: Density().autoPx(24)),
+                            ),
+                            onPressed: () {
                               Navigator.pop(context);
                             },
-                            defaultTextStyle: TextStyle(
-                                color: Colors.grey,
-                                fontSize: Density().autoHPx(24)),
-                          ),
-                          Menu(
-                              name: "确定",
-                              onPress: () {},
-                              defaultTextStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: Density().autoHPx(24)),
-                              activeTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Density().autoHPx(24)),
-                              activeColor: Colors.blue)
-                        ],
-                        buttonHeight: Density().autoHPx(80),
-                        dividerColor: Colors.green,
+                          ));
+                        },
+                        dividerColor: Colors.grey,
+                        buttonHeight: Density().autoPx(80),
+                        buttonDivideBuilder: (context, index) {
+                          return VerticalDivider(
+                            color: Colors.grey,
+                          );
+                        },
                         borderRadius: BorderRadius.all(
                             Radius.circular(Density().autoPx(10))),
                       );
@@ -517,59 +523,59 @@ class _MyAppState extends State<MyApp> {
               child: Text("消息对话框")),
           FlatButton(
               onPressed: () async {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return ShareDialog(
-                        alignment: Alignment.center,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        margin: EdgeInsets.only(
-                            left: Density().autoPx(30),
-                            right: Density().autoPx(30)),
-                        clickWhiteAreaClose: true,
-                        childAspectRatio: 1.1,
-                        crossAxisCount: 3,
-                        itemPadding: EdgeInsets.all(Density().autoPx(30)),
-                        iconSize:
-                            Size(Density().autoPx(80), Density().autoPx(80)),
-                        menus: [
-                          Menu(
-                              name: "QQ",
-                              onPress: () {
-                                Navigator.pop(context);
-                              },
-                              defaultTextStyle: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: Density().autoHPx(24)),
-                              defaultIcon: "res/images/icon_qq_login.png",
-                              activeIcon: "res/images/icon_qq_login_press.png"),
-                          Menu(
-                              name: "微信",
-                              onPress: () {},
-                              defaultTextStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: Density().autoHPx(24)),
-                              activeTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Density().autoHPx(24)),
-                              activeColor: Colors.blue,
-                              defaultIcon: "res/images/icon_qq_login.png",
-                              activeIcon: "res/images/icon_qq_login_press.png"),
-                          Menu(
-                              name: "朋友圈",
-                              onPress: () {},
-                              defaultTextStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: Density().autoHPx(24)),
-                              activeTextStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Density().autoHPx(24)),
-                              activeColor: Colors.blue,
-                              defaultIcon: "res/images/icon_qq_login.png",
-                              activeIcon: "res/images/icon_qq_login_press.png")
-                        ],
-                      );
-                    });
+//                showDialog(
+//                    context: context,
+//                    builder: (context) {
+//                      return ShareDialog(
+//                        alignment: Alignment.center,
+//                        borderRadius: BorderRadius.all(Radius.circular(10)),
+//                        margin: EdgeInsets.only(
+//                            left: Density().autoPx(30),
+//                            right: Density().autoPx(30)),
+//                        clickWhiteAreaClose: true,
+//                        childAspectRatio: 1.1,
+//                        crossAxisCount: 3,
+//                        itemPadding: EdgeInsets.all(Density().autoPx(30)),
+//                        iconSize:
+//                            Size(Density().autoPx(80), Density().autoPx(80)),
+//                        menus: [
+//                          Menu(
+//                              name: "QQ",
+//                              onPress: () {
+//                                Navigator.pop(context);
+//                              },
+//                              defaultTextStyle: TextStyle(
+//                                  color: Colors.grey,
+//                                  fontSize: Density().autoPx(24)),
+//                              defaultIcon: "res/images/icon_qq_login.png",
+//                              activeIcon: "res/images/icon_qq_login_press.png"),
+//                          Menu(
+//                              name: "微信",
+//                              onPress: () {},
+//                              defaultTextStyle: TextStyle(
+//                                  color: Colors.black,
+//                                  fontSize: Density().autoPx(24)),
+//                              activeTextStyle: TextStyle(
+//                                  color: Colors.white,
+//                                  fontSize: Density().autoPx(24)),
+//                              activeColor: Colors.blue,
+//                              defaultIcon: "res/images/icon_qq_login.png",
+//                              activeIcon: "res/images/icon_qq_login_press.png"),
+//                          Menu(
+//                              name: "朋友圈",
+//                              onPress: () {},
+//                              defaultTextStyle: TextStyle(
+//                                  color: Colors.black,
+//                                  fontSize: Density().autoPx(24)),
+//                              activeTextStyle: TextStyle(
+//                                  color: Colors.white,
+//                                  fontSize: Density().autoPx(24)),
+//                              activeColor: Colors.blue,
+//                              defaultIcon: "res/images/icon_qq_login.png",
+//                              activeIcon: "res/images/icon_qq_login_press.png")
+//                        ],
+//                      );
+//                    });
               },
               child: Text("分享对话框")),
           FlatButton(
@@ -612,14 +618,14 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
             child: new Image.asset(
               'res/images/icon_qq_login.png',
-              width: Density().autoWPx(300),
-              height: Density().autoWPx(300),
+              width: Density().autoPx(300),
+              height: Density().autoPx(300),
               fit: BoxFit.fill,
               centerSlice: Rect.fromLTRB(
-                  Density().autoWPx(90),
-                  Density().autoWPx(90),
-                  Density().autoWPx(130),
-                  Density().autoWPx(130)),
+                  Density().autoPx(90),
+                  Density().autoPx(90),
+                  Density().autoPx(130),
+                  Density().autoPx(130)),
             ),
           ),
           DecoratedBox(
@@ -627,10 +633,10 @@ class _MyAppState extends State<MyApp> {
                 image: DecorationImage(
                     fit: BoxFit.fill,
                     centerSlice: Rect.fromLTRB(
-                        Density().autoWPx(90),
-                        Density().autoWPx(90),
-                        Density().autoWPx(130),
-                        Density().autoWPx(130)),
+                        Density().autoPx(90),
+                        Density().autoPx(90),
+                        Density().autoPx(130),
+                        Density().autoPx(130)),
                     image: AssetImage("res/images/icon_qq_login.png"))),
             position: DecorationPosition.background,
             child: SizedBox(
@@ -654,35 +660,35 @@ class _MyAppState extends State<MyApp> {
           ),
           RaisedButton(
             onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return ItemDialog(
-                      [
-                        Menu(
-                            name: "相机",
-                            defaultTextStyle:
-                                TextStyle(fontSize: Density().autoHPx(28))),
-                        Menu(
-                            name: "相册",
-                            defaultTextStyle:
-                                TextStyle(fontSize: Density().autoHPx(28)))
-                      ],
-                      Menu(
-                          name: "取消",
-                          defaultTextStyle:
-                              TextStyle(fontSize: Density().autoHPx(28)),
-                          defaultColor: Colors.white),
-                      itemHeight: Density().autoHPx(80),
-                      cancelHeight: Density().autoHPx(80),
-                      margin: EdgeInsets.all(10),
-                      title: "请选择",
-                      titleHeight: Density().autoHPx(60),
-                      titleStyle: TextStyle(
-                          color: Colors.grey, fontSize: Density().autoHPx(24)),
-                      visualCancel: false,
-                    );
-                  });
+//              showDialog(
+//                  context: context,
+//                  builder: (context) {
+//                    return ItemDialog(
+//                      [
+//                        Menu(
+//                            name: "相机",
+//                            defaultTextStyle:
+//                                TextStyle(fontSize: Density().autoPx(28))),
+//                        Menu(
+//                            name: "相册",
+//                            defaultTextStyle:
+//                                TextStyle(fontSize: Density().autoPx(28)))
+//                      ],
+//                      Menu(
+//                          name: "取消",
+//                          defaultTextStyle:
+//                              TextStyle(fontSize: Density().autoPx(28)),
+//                          defaultColor: Colors.white),
+//                      itemHeight: Density().autoPx(80),
+//                      cancelHeight: Density().autoPx(80),
+//                      margin: EdgeInsets.all(10),
+//                      title: "请选择",
+//                      titleHeight: Density().autoPx(60),
+//                      titleStyle: TextStyle(
+//                          color: Colors.grey, fontSize: Density().autoPx(24)),
+//                      visualCancel: false,
+//                    );
+//                  });
             },
             child: Text("显示item dialog"),
           ),
