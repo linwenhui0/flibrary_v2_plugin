@@ -486,9 +486,9 @@ class _MyAppState extends State<MyApp> {
                         messageMenu: MessageMenu(
                           message: "内容" * 20,
                           messageTextStyle: TextStyle(
-                            fontSize: Density().autoPx(30),
-                            color: Colors.black,
-                          ),
+                              fontSize: Density().autoPx(30),
+                              color: Colors.black,
+                              decoration: TextDecoration.none),
                         ),
                         buttonSize: 2,
                         buttonBuilder: (context, index) {
@@ -500,7 +500,7 @@ class _MyAppState extends State<MyApp> {
                             child: Text(
                               index == 0 ? "取消" : "确定",
                               style: TextStyle(
-                                  color: Colors.grey,
+                                  color: Colors.black,
                                   fontSize: Density().autoPx(24)),
                             ),
                             onPressed: () {
@@ -513,6 +513,8 @@ class _MyAppState extends State<MyApp> {
                         buttonDivideBuilder: (context, index) {
                           return VerticalDivider(
                             color: Colors.grey,
+                            width: 1,
+                            thickness: 1,
                           );
                         },
                         borderRadius: BorderRadius.all(
@@ -523,59 +525,30 @@ class _MyAppState extends State<MyApp> {
               child: Text("消息对话框")),
           FlatButton(
               onPressed: () async {
-//                showDialog(
-//                    context: context,
-//                    builder: (context) {
-//                      return ShareDialog(
-//                        alignment: Alignment.center,
-//                        borderRadius: BorderRadius.all(Radius.circular(10)),
-//                        margin: EdgeInsets.only(
-//                            left: Density().autoPx(30),
-//                            right: Density().autoPx(30)),
-//                        clickWhiteAreaClose: true,
-//                        childAspectRatio: 1.1,
-//                        crossAxisCount: 3,
-//                        itemPadding: EdgeInsets.all(Density().autoPx(30)),
-//                        iconSize:
-//                            Size(Density().autoPx(80), Density().autoPx(80)),
-//                        menus: [
-//                          Menu(
-//                              name: "QQ",
-//                              onPress: () {
-//                                Navigator.pop(context);
-//                              },
-//                              defaultTextStyle: TextStyle(
-//                                  color: Colors.grey,
-//                                  fontSize: Density().autoPx(24)),
-//                              defaultIcon: "res/images/icon_qq_login.png",
-//                              activeIcon: "res/images/icon_qq_login_press.png"),
-//                          Menu(
-//                              name: "微信",
-//                              onPress: () {},
-//                              defaultTextStyle: TextStyle(
-//                                  color: Colors.black,
-//                                  fontSize: Density().autoPx(24)),
-//                              activeTextStyle: TextStyle(
-//                                  color: Colors.white,
-//                                  fontSize: Density().autoPx(24)),
-//                              activeColor: Colors.blue,
-//                              defaultIcon: "res/images/icon_qq_login.png",
-//                              activeIcon: "res/images/icon_qq_login_press.png"),
-//                          Menu(
-//                              name: "朋友圈",
-//                              onPress: () {},
-//                              defaultTextStyle: TextStyle(
-//                                  color: Colors.black,
-//                                  fontSize: Density().autoPx(24)),
-//                              activeTextStyle: TextStyle(
-//                                  color: Colors.white,
-//                                  fontSize: Density().autoPx(24)),
-//                              activeColor: Colors.blue,
-//                              defaultIcon: "res/images/icon_qq_login.png",
-//                              activeIcon: "res/images/icon_qq_login_press.png")
-//                        ],
-//                      );
-//                    });
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return ShareBottomAnimationDialog(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        backgroundColor: Colors.white,
+                        childAspectRatio: 1.1,
+                        crossAxisCount: 3,
+                        itemCount: 3,
+                        itemBuilder: (context, index, onCloseDialog) {
+                          return CupertinoButton(
+                              child: Image.asset(
+                                "res/images/icon_qq_login.png",
+                                width: Density().autoPx(100),
+                                height: Density().autoPx(100),
+                              ),
+                              onPressed: () {
+                                if (onCloseDialog != null) {
+                                  onCloseDialog();
+                                }
+                              });
+                        },
+                      );
+                    });
               },
               child: Text("分享对话框")),
           FlatButton(
@@ -660,35 +633,49 @@ class _MyAppState extends State<MyApp> {
           ),
           RaisedButton(
             onPressed: () {
-//              showDialog(
-//                  context: context,
-//                  builder: (context) {
-//                    return ItemDialog(
-//                      [
-//                        Menu(
-//                            name: "相机",
-//                            defaultTextStyle:
-//                                TextStyle(fontSize: Density().autoPx(28))),
-//                        Menu(
-//                            name: "相册",
-//                            defaultTextStyle:
-//                                TextStyle(fontSize: Density().autoPx(28)))
-//                      ],
-//                      Menu(
-//                          name: "取消",
-//                          defaultTextStyle:
-//                              TextStyle(fontSize: Density().autoPx(28)),
-//                          defaultColor: Colors.white),
-//                      itemHeight: Density().autoPx(80),
-//                      cancelHeight: Density().autoPx(80),
-//                      margin: EdgeInsets.all(10),
-//                      title: "请选择",
-//                      titleHeight: Density().autoPx(60),
-//                      titleStyle: TextStyle(
-//                          color: Colors.grey, fontSize: Density().autoPx(24)),
-//                      visualCancel: false,
-//                    );
-//                  });
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ItemBottomAnimationDialog(
+                      titleMenu: TitleMenu(
+                          title: "请选择",
+                          height: Density().autoPx(100),
+                          titleTextStyle: TextStyle(color: Colors.black)),
+                      titleDividerColor: Colors.black,
+                      cancelMarginTop: Density().autoPx(20),
+                      cancelMenu: TitleMenu(
+                          title: "取消",
+                          titleBackground: Colors.white,
+                          height: Density().autoPx(100),
+                          titleTextStyle: TextStyle(color: Colors.black)),
+                      itemCount: 3,
+                      itemBuilder: (context, index, onCloseDialog) {
+                        return InkWell(
+                          child: SizedBox(
+                            height: Density().autoPx(80),
+                            child: Center(
+                              child: Text(
+                                "item $index",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                      itemDividerBuilder: (context, index) => Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Colors.grey,
+                      ),
+                      margin: EdgeInsets.only(
+                          left: Density().autoPx(20),
+                          right: Density().autoPx(20),
+                          bottom: Density().autoPx(20)),
+                    );
+                  });
             },
             child: Text("显示item dialog"),
           ),

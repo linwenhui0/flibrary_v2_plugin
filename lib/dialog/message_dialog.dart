@@ -57,6 +57,7 @@ class MessageDialog extends StatelessWidget {
                 ),
                 Divider(
                   height: 1,
+                  thickness: 1,
                   color: titleDividerColor,
                 ),
                 Expanded(
@@ -67,6 +68,7 @@ class MessageDialog extends StatelessWidget {
                 ),
                 Divider(
                   height: 1,
+                  thickness: 1,
                   color: dividerColor,
                 ),
                 SizedBox(
