@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/services.dart';
 import 'package:flutter_permissions/flutter_permissions.dart';
 import 'package:flutter_utils/util/device_util.dart';
+import 'package:flutter_permissions/flutter_permissions_platform_interface.dart';
 
 class FLibraryPlugin {
   FLibraryPlugin._();

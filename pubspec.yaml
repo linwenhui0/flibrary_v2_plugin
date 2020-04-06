@@ -2,7 +2,7 @@ name: flibrary_plugin
 description: A new Flutter plugin.
 version: 0.0.1
 author: linwh
-homepage: https://github.com/linwenhui0/flibrary_plugin.git
+homepage: https://github.com/linwenhui0/flibrary_v2_plugin.git
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -14,7 +14,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  shared_preferences: 0.5.6
+  shared_preferences: 0.5.4
   dio: 3.0.7
   dio_cookie_manager: 1.0.0
   sqflite: 1.2.0
@@ -30,7 +30,6 @@ dependencies:
   flutter_utils:
     git:
       url: https://github.com/linwenhui0/flibrary_utils.git
-      refs: 0.0.3
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

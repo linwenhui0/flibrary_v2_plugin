@@ -14,7 +14,9 @@ class App extends StatelessWidget {
   final Widget home;
   final Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates;
   final Iterable<Locale> supportedLocales;
+  final Map<String, WidgetBuilder> routes;
   final RouteFactory onGenerateRoute;
+  final List<NavigatorObserver> navigatorObservers;
 
   const App({
     Key key,
@@ -23,7 +25,9 @@ class App extends StatelessWidget {
     this.locale,
     this.localizationsDelegates,
     this.supportedLocales,
+    this.routes,
     this.onGenerateRoute,
+    this.navigatorObservers
   }) : super(key: key);
 
   @override
@@ -42,8 +46,10 @@ class App extends StatelessWidget {
       theme: theme,
       locale: locale,
       localizationsDelegates: delegates,
+      navigatorObservers: navigatorObservers,
       supportedLocales: supportedLocales,
       home: home,
+      routes: routes,
       onGenerateRoute: onGenerateRoute,
     );
   }

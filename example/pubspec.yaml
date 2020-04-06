@@ -42,6 +42,7 @@ flutter:
   assets:
     - res/images/icon_qq_login.png
     - res/images/icon_qq_login_press.png
+    - res/images/bundle.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

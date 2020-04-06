@@ -28,6 +28,7 @@ import 'package:flutter_utils/util/encrypt/encrypt_help.dart';
 import 'db/database_test.dart';
 import 'db/school.dart';
 import 'db/student.dart';
+import 'package:flutter_permissions/flutter_permissions_platform_interface.dart';
 
 void main() {
   runApp(new App());
@@ -364,7 +365,7 @@ class _MyAppState extends State<MyApp> {
           ),
           FlatButton(
               onPressed: () {
-                String result = EncryptHelp.encodeMd5("123456");
+                String result = EncryptHelp.generateMd5ByString("123456");
                 textBuffer.write("result($result)\n");
                 this.setState(() {});
               },
@@ -590,31 +591,32 @@ class _MyAppState extends State<MyApp> {
           new Padding(
             padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
             child: new Image.asset(
-              'res/images/icon_qq_login.png',
+              'res/images/bundle.png',
               width: Density().autoPx(300),
               height: Density().autoPx(300),
               fit: BoxFit.fill,
-              centerSlice: Rect.fromLTRB(
-                  Density().autoPx(90),
-                  Density().autoPx(90),
-                  Density().autoPx(130),
-                  Density().autoPx(130)),
+              centerSlice: Rect.fromLTWH(24, 42, 30, 10),
             ),
           ),
           DecoratedBox(
             decoration: BoxDecoration(
                 image: DecorationImage(
                     fit: BoxFit.fill,
-                    centerSlice: Rect.fromLTRB(
-                        Density().autoPx(90),
-                        Density().autoPx(90),
-                        Density().autoPx(130),
-                        Density().autoPx(130)),
-                    image: AssetImage("res/images/icon_qq_login.png"))),
+                    centerSlice: Rect.fromLTWH(24, 42, 30, 10),
+                    image: AssetImage('res/images/bundle.png'))),
             position: DecorationPosition.background,
             child: SizedBox(
-              height: Density().autoPx(300),
-              child: Text("背景"),
+              height: Density().autoPx(100),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: Density().autoPx(35),
+                    vertical: Density().autoPx(20)),
+                child: Text(
+                  "背景",
+                  style: TextStyle(
+                      color: Colors.black, fontSize: Density().autoPx(30)),
+                ),
+              ),
             ),
           ),
           Row(
