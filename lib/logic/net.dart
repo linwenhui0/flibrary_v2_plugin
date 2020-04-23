@@ -15,15 +15,14 @@ class Request {
   Map<String, String> _params = Map();
   Map<String, MultipartFile> _files = Map();
   Map<String, String> _extra = Map();
-  bool useProxy;
 
-  Request() {
+  Request({bool useProxy}) {
     dio = Dio();
     dio.interceptors.add(CookieManager(CookieJar()));
-    _initProxy();
+    _initProxy(useProxy);
   }
 
-  _initProxy() async {
+  _initProxy(bool useProxy) async {
     if (useProxy == true) {
       String host = await FLibraryPlugin.getProxyHost();
       String port = await FLibraryPlugin.getProxyPort();

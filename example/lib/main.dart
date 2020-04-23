@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flibrary_plugin/widget/ripple/circle_wave.dart';
 import 'package:dio/dio.dart';
 import 'package:flibrary_plugin/annotation/database/annotation_manager.dart';
 import 'package:flibrary_plugin/dialog/items_dialog.dart';
@@ -70,6 +71,13 @@ class _MyAppState extends State<MyApp> {
       ),
       body: new ListView(
         children: <Widget>[
+          Center(child: CircleWave(
+            size: Size(200, 200),
+            gradientWidth: 50,
+            radius: 30,
+            waveRate: 4,
+            offset: 1,
+          ),),
           new MaterialButton(
             onPressed: () async {
               SharedPreferences sp = await SharedPreferences.getInstance();
