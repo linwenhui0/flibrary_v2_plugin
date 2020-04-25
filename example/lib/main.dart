@@ -15,6 +15,7 @@ import 'package:flibrary_plugin/widget/button/button.dart';
 import 'package:flibrary_plugin/widget/button/check_box.dart';
 import 'package:flibrary_plugin/widget/button/receiver_code_button.dart';
 import 'package:flibrary_plugin/widget/input/text_field.dart';
+import 'package:flibrary_plugin_example/image_list_test.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,6 +56,7 @@ class _MyAppState extends State<MyApp> {
   StringBuffer textBuffer;
   FocusNode _focusNodeFirstName = new FocusNode();
   TextEditingController phoneController = TextEditingController();
+  bool run;
 
   @override
   void initState() {
@@ -71,13 +73,28 @@ class _MyAppState extends State<MyApp> {
       ),
       body: new ListView(
         children: <Widget>[
-          Center(child: CircleWave(
-            size: Size(200, 200),
-            gradientWidth: 50,
-            radius: 30,
-            waveRate: 4,
-            offset: 1,
-          ),),
+          Center(
+            child: CircleWave(
+              size: Size(200, 200),
+              gradientWidth: 50,
+              radius: 30,
+              waveRate: 4,
+              run: run,
+              duration: Duration(milliseconds: 1000),
+            ),
+          ),
+          MaterialButton(
+            onPressed: () {
+              this.setState(() {
+                if (run == true) {
+                  run = false;
+                } else {
+                  run = true;
+                }
+              });
+            },
+            child: Text("启动水波动画"),
+          ),
           new MaterialButton(
             onPressed: () async {
               SharedPreferences sp = await SharedPreferences.getInstance();
@@ -613,8 +630,8 @@ class _MyAppState extends State<MyApp> {
                     centerSlice: Rect.fromLTWH(24, 42, 30, 10),
                     image: AssetImage('res/images/bundle.png'))),
             position: DecorationPosition.background,
-            child: SizedBox(
-              height: Density().autoPx(100),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: Density().autoPx(200)),
               child: Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: Density().autoPx(35),
@@ -739,6 +756,14 @@ class _MyAppState extends State<MyApp> {
               }
             },
             child: Text("下载apk"),
+          ),
+          MaterialButton(
+            child: Text("列表测试"),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return ImageListPage();
+              }));
+            },
           ),
           new Text(textBuffer.toString())
         ],
