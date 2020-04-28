@@ -1,9 +1,9 @@
 import 'package:flibrary_plugin/model/menu.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'message_dialog.dart' show IndexedButtonDivideWidgetBuilder;
-
-typedef OnItemBuilder = Widget Function(
-    BuildContext context, int index, VoidCallback dialog);
+import 'package:flutter/widgets.dart';
+import 'message_dialog.dart'
+    show IndexedButtonDivideWidgetBuilder, IndexedButtonWidgetBuilder;
 
 class ItemDialog extends StatelessWidget {
   final TitleMenu titleMenu;
@@ -15,9 +15,9 @@ class ItemDialog extends StatelessWidget {
   final double borderRadius;
   final Color backgroundColor;
   final int itemCount;
-  final OnItemBuilder itemBuilder;
+  final IndexedButtonWidgetBuilder itemBuilder;
   final IndexedButtonDivideWidgetBuilder itemDividerBuilder;
-  final VoidCallback onCloseDialog;
+  final EdgeInsets margin;
 
   const ItemDialog(
       {Key key,
@@ -30,7 +30,7 @@ class ItemDialog extends StatelessWidget {
       this.itemCount: 3,
       this.itemBuilder,
       this.itemDividerBuilder,
-      this.onCloseDialog})
+      this.margin: const EdgeInsets.all(0)})
       : super(key: key);
 
   @override
@@ -48,35 +48,41 @@ class ItemDialog extends StatelessWidget {
     ];
 
     for (int index = 0; index < itemCount; index++) {
-      children.add(itemBuilder(context, index, onCloseDialog));
+      children.add(itemBuilder(context, index));
       if (index != itemCount - 1) {
         children.add(itemDividerBuilder(context, index));
       }
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        DecoratedBox(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(borderRadius)),
-          child: Column(
-            children: children,
-            mainAxisSize: MainAxisSize.min,
-          ),
-        ),
-        Offstage(
-          child: Padding(
-            padding: EdgeInsets.only(top: cancelMarginTop),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(borderRadius),
-              child: buildCancel(context),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Padding(
+        padding: margin,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            DecoratedBox(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(borderRadius)),
+              child: Column(
+                children: children,
+                mainAxisSize: MainAxisSize.min,
+              ),
             ),
-          ),
-          offstage: !cancelMenu.showTitle,
+            Offstage(
+              child: Padding(
+                padding: EdgeInsets.only(top: cancelMarginTop),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  child: buildCancel(context),
+                ),
+              ),
+              offstage: !cancelMenu.showTitle,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -102,8 +108,9 @@ class ItemDialog extends StatelessWidget {
 
   Widget buildCancel(BuildContext context) {
     return cancelMenu.widget ??
-        InkWell(
-          onTap: onCloseDialog,
+        CupertinoButton(
+          padding: EdgeInsets.zero,
+          onPressed: () => Navigator.pop(context),
           child: SizedBox(
             height: cancelMenu.height,
             child: DecoratedBox(
@@ -120,113 +127,5 @@ class ItemDialog extends StatelessWidget {
             ),
           ),
         );
-  }
-}
-
-class ItemBottomAnimationDialog extends StatefulWidget {
-  final TitleMenu titleMenu;
-  final Color titleDividerColor;
-
-  final double cancelMarginTop;
-  final TitleMenu cancelMenu;
-
-  final EdgeInsets margin;
-  final double borderRadius;
-  final Color backgroundColor;
-  final int itemCount;
-  final OnItemBuilder itemBuilder;
-  final IndexedButtonDivideWidgetBuilder itemDividerBuilder;
-  final Duration animationRunTime;
-
-  const ItemBottomAnimationDialog(
-      {Key key,
-      this.titleMenu: const TitleMenu(),
-      this.titleDividerColor: Colors.white,
-      this.cancelMarginTop: 0,
-      this.cancelMenu: const TitleMenu(),
-      this.margin: EdgeInsets.zero,
-      this.borderRadius: 8,
-      this.backgroundColor: Colors.white,
-      this.itemCount: 3,
-      this.itemBuilder,
-      this.itemDividerBuilder,
-      this.animationRunTime: const Duration(milliseconds: 300)})
-      : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _ItemBottomAnimationState();
-  }
-}
-
-class _ItemBottomAnimationState extends State<ItemBottomAnimationDialog>
-    with SingleTickerProviderStateMixin {
-  AnimationController controller;
-  Animation animation;
-
-  @override
-  void initState() {
-    super.initState();
-    controller =
-        AnimationController(vsync: this, duration: widget.animationRunTime);
-    controller.addStatusListener(onExitAnimation);
-    animation = createAnimation();
-    controller.forward();
-  }
-
-  Animation createAnimation() {
-    Animation enterAnimation =
-        Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(controller);
-    return enterAnimation;
-  }
-
-  void onExitAnimation(AnimationStatus status) {
-    if (status == AnimationStatus.dismissed) {
-      Navigator.pop(context);
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller?.removeStatusListener(onExitAnimation);
-    controller?.dispose();
-    controller = null;
-  }
-
-  void onCloseDialog() {
-    if (controller?.isAnimating != true) {
-      controller?.reverse();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onCloseDialog,
-      child: Material(
-        child: Padding(
-          padding: widget.margin,
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: SlideTransition(
-              position: animation,
-              child: ItemDialog(
-                  titleMenu: widget.titleMenu,
-                  titleDividerColor: widget.titleDividerColor,
-                  cancelMarginTop: widget.cancelMarginTop,
-                  cancelMenu: widget.cancelMenu,
-                  borderRadius: widget.borderRadius,
-                  backgroundColor: widget.backgroundColor,
-                  itemCount: widget.itemCount,
-                  itemBuilder: widget.itemBuilder,
-                  itemDividerBuilder: widget.itemDividerBuilder,
-                  onCloseDialog: onCloseDialog),
-            ),
-          ),
-        ),
-        color: Colors.transparent,
-      ),
-    );
   }
 }

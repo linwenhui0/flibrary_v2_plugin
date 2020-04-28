@@ -31,6 +31,7 @@ import 'db/database_test.dart';
 import 'db/school.dart';
 import 'db/student.dart';
 import 'package:flutter_permissions/flutter_permissions_platform_interface.dart';
+import 'package:flibrary_plugin/widget/router/router_config.dart';
 
 void main() {
   runApp(new App());
@@ -39,9 +40,11 @@ void main() {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    RouterConfig().initState();
     DatabaseManager()
         .init("main.db", 1, [SchoolDatabaseTable(), StudentDatabaseTable()]);
     return MaterialApp(
+      navigatorObservers: [RouterConfig().navigatorObserver],
       home: MyApp(),
     );
   }
@@ -55,13 +58,26 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   StringBuffer textBuffer;
   FocusNode _focusNodeFirstName = new FocusNode();
-  TextEditingController phoneController = TextEditingController();
+  TextEditingController phoneController;
+
+  TextEditingController testController;
   bool run;
 
   @override
   void initState() {
     super.initState();
     textBuffer = new StringBuffer();
+    phoneController = TextEditingController();
+    testController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    phoneController.dispose();
+    testController.dispose();
+    phoneController = null;
+    testController = null;
   }
 
   @override
@@ -94,6 +110,23 @@ class _MyAppState extends State<MyApp> {
               });
             },
             child: Text("启动水波动画"),
+          ),
+          MaterialButton(
+            onPressed: () {
+              RouterConfig().showDialog(builder: (context) {
+                return Center(
+                  child: SizedBox(
+                    width: Density().autoPx(500),
+                    height: Density().autoPx(300),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(color: Colors.white),
+                      child: Text("测试"),
+                    ),
+                  ),
+                );
+              });
+            },
+            child: Text("测试弹窗"),
           ),
           new MaterialButton(
             onPressed: () async {
@@ -322,7 +355,7 @@ class _MyAppState extends State<MyApp> {
           ),
           TextField(
             controller: phoneController,
-            keyboardType: TextInputType.number,
+            keyboardType: TextInputType.url,
             decoration: InputDecoration(
                 suffix: SizedBox(
               child: ReceiverCodeButton(
@@ -351,42 +384,32 @@ class _MyAppState extends State<MyApp> {
               height: Density().autoPx(80),
             )),
           ),
-          TextFieldInput(
-            prefixIcon: Material(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: Density().autoPx(20)),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    "账号",
-                    style: TextStyle(fontSize: Density().autoPx(20)),
-                  ),
-                  widthFactor: 1,
+          SizedBox(
+            child: DecoratedBox(
+              decoration: BoxDecoration(color: Colors.amber),
+              child: Center(
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: TextField(
+                      controller: testController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration.collapsed(
+                          fillColor: Colors.blue,
+                          filled: true,
+                          hintText: "请输入手机号",
+                          border: InputBorder.none),
+                    )),
+                    IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          testController.clear();
+                        })
+                  ],
                 ),
               ),
-              color: Colors.blue,
             ),
-            hintText: "请输入帐号",
-            hintStyle: TextStyle(
-              fontSize: Density().autoPx(20),
-            ),
-            onEditingComplete: () {
-              Print().printNative("onEditingComplete");
-            },
-            onSubmitted: (text) {
-              Print().printNative("onSubmitted $text");
-            },
-            contentPadding:
-                EdgeInsets.symmetric(vertical: Density().autoPx(20)),
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              fontSize: Density().autoPx(20),
-            ),
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.search,
-            maxLines: 1,
-            showClose: true,
-            closeIconSize: 20,
+            height: Density().autoPx(130),
           ),
           FlatButton(
               onPressed: () {
@@ -496,7 +519,7 @@ class _MyAppState extends State<MyApp> {
           FlatButton(
               onPressed: () async {
                 showDialog(
-                    barrierDismissible: false,
+                    barrierDismissible: true,
                     context: context,
                     builder: (context) {
                       return MessageDialog(
@@ -551,16 +574,15 @@ class _MyAppState extends State<MyApp> {
               child: Text("消息对话框")),
           FlatButton(
               onPressed: () async {
-                showDialog(
-                    context: context,
+                RouterConfig().showDialog(
                     builder: (context) {
-                      return ShareBottomAnimationDialog(
+                      return ShareDialog(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                         backgroundColor: Colors.white,
                         childAspectRatio: 1.1,
                         crossAxisCount: 3,
                         itemCount: 3,
-                        itemBuilder: (context, index, onCloseDialog) {
+                        itemBuilder: (context, index) {
                           return CupertinoButton(
                               child: Image.asset(
                                 "res/images/icon_qq_login.png",
@@ -568,13 +590,15 @@ class _MyAppState extends State<MyApp> {
                                 height: Density().autoPx(100),
                               ),
                               onPressed: () {
-                                if (onCloseDialog != null) {
-                                  onCloseDialog();
-                                }
+                                Navigator.pop(context);
                               });
                         },
+                        alignment: Alignment.bottomCenter,
                       );
-                    });
+                    },
+                    transitionDuration: const Duration(milliseconds: 500),
+                    transitionBuilder: RouterConfig.standardTransitionsBuilder(
+                        transitionType: TransitionType.inFromBottom));
               },
               child: Text("分享对话框")),
           FlatButton(
@@ -660,14 +684,13 @@ class _MyAppState extends State<MyApp> {
           ),
           RaisedButton(
             onPressed: () {
-              showDialog(
-                  context: context,
+              RouterConfig().showDialog(
                   builder: (context) {
-                    return ItemBottomAnimationDialog(
+                    return ItemDialog(
                       titleMenu: TitleMenu(
                           title: "请选择",
                           height: Density().autoPx(100),
-                          titleTextStyle: TextStyle(color: Colors.black)),
+                          titleTextStyle: TextStyle(color: Colors.black,fontSize: Density().autoPx(20))),
                       titleDividerColor: Colors.black,
                       cancelMarginTop: Density().autoPx(20),
                       cancelMenu: TitleMenu(
@@ -676,8 +699,9 @@ class _MyAppState extends State<MyApp> {
                           height: Density().autoPx(100),
                           titleTextStyle: TextStyle(color: Colors.black)),
                       itemCount: 3,
-                      itemBuilder: (context, index, onCloseDialog) {
-                        return InkWell(
+                      itemBuilder: (context, index) {
+                        return CupertinoButton(
+                          padding: EdgeInsets.zero,
                           child: SizedBox(
                             height: Density().autoPx(80),
                             child: Center(
@@ -687,7 +711,7 @@ class _MyAppState extends State<MyApp> {
                               ),
                             ),
                           ),
-                          onTap: () {
+                          onPressed: () {
                             Navigator.pop(context);
                           },
                         );
@@ -702,7 +726,9 @@ class _MyAppState extends State<MyApp> {
                           right: Density().autoPx(20),
                           bottom: Density().autoPx(20)),
                     );
-                  });
+                  },
+                  transitionBuilder: RouterConfig.standardTransitionsBuilder(
+                      transitionType: TransitionType.inFromBottom));
             },
             child: Text("显示item dialog"),
           ),

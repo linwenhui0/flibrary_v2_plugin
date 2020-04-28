@@ -112,9 +112,9 @@ class CircleWavePaint extends CustomPainter {
 
     for (double waveValue in waveList) {
       double r = waveValue * gradientWidth;
-      print(
-          "waveValue($waveValue) alpha(${(255 * (1 - waveValue)).toInt()}) radius($r)");
       if (r > 0) {
+        print(
+            "waveValue($waveValue) alpha(${(255 * (1 - waveValue)).toInt()}) radius($r)");
         paint.color = color.withAlpha((255 * (1 - waveValue)).toInt());
         canvas.drawCircle(
             Offset(size.width / 2, size.height / 2), r + radius, paint);
